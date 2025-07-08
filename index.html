@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+	<script src="http://static.geetest.com/v4/gt4.js"></script>
+	<script src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#0FC6C2',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E5E6EB',
+                            300: '#C9CDD4',
+                            400: '#86909C',
+                            500: '#4E5969',
+                            600: '#1D2129',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+	<script>
+	    var captchaId = "9ce2e0587fcc6eec07efd1c9327bd722"   // gt_id
+	    var product = "float"
+	        if (product !== 'bind') {
+	        $('#btn').remove();
+	    }
+	
+	    initGeetest4({
+	        captchaId: captchaId,
+	        product: product,
+	    }, function (gt) {
+	        window.gt = gt
+	        gt
+	            .appendTo("#captcha")
+	            .onSuccess(function (e) {
+	                var result = gt.getValidate();
+	                $.ajax({
+	                    url: '/login',
+	                    data: result,
+	                    dataType: 'json',
+	                    success: function (res) {
+	                        console.log(res.result);
+	                    }
+	                })
+	            })
+	
+	        $('#btn').click(function () {
+	            gt.showBox();
+	        })
+	        $('#reset_btn').click(function () {
+	            gt.reset();
+	        })
+	    });
+	
+	</script>
+	<script></script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .form-input-focus {
+                @apply border-primary ring-1 ring-primary transition-all duration-200;
+            }
+            .btn-hover {
+                @apply transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200;
+            }
+            .bg-gradient-primary {
+                @apply bg-gradient-to-r from-primary to-secondary;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- 登录卡片 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+            <!-- 顶部品牌区域 -->
+            <div class="bg-gradient-primary p-8 text-white text-center">
+                <div class="text-4xl mb-2">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+                <h1 class="text-2xl font-bold">校园服务平台</h1>
+                <p class="text-white/80 mt-2">欢迎回来，请登录您的账户</p>
+            </div>
+
+            <!-- 登录表单 -->
+            <div class="p-8">
+                <!-- 角色切换 -->
+                <div class="flex mb-8">
+                    <button id="studentBtn" class="flex-1 py-3 px-4 font-medium rounded-tl-lg bg-primary text-white transition-all duration-300">
+                        <i class="fa fa-user mr-2"></i>学生
+                    </button>
+                    <button id="adminBtn" class="flex-1 py-3 px-4 font-medium rounded-tr-lg bg-neutral-200 text-neutral-500 transition-all duration-300">
+                        <i class="fa fa-cog mr-2"></i>管理员
+                    </button>
+                </div>
+
+                <!-- 表单 -->
+                <form id="loginForm" class="space-y-5">
+                    <div class="space-y-2">
+                        <label for="account" class="block text-sm font-medium text-neutral-600">账号</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <input type="text" id="account" name="account" class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:form-input-focus" placeholder="请输入账号" required>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="password" class="block text-sm font-medium text-neutral-600">密码</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <input type="password" id="password" name="password" class="w-full pl-10 pr-10 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:form-input-focus" placeholder="请输入密码" required>
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400 hover:text-neutral-600 transition-colors">
+                                <i class="fa fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+					<div>
+					        <div id="captcha">
+					            <div id="btn" class="btn">提交</div>
+					        </div>
+					        <br></div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="rememberMe" type="checkbox" class="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary">
+                            <label for="rememberMe" class="ml-2 block text-sm text-neutral-500">记住我</label>
+                        </div>
+                        <a href="#" class="text-sm font-medium text-primary hover:text-primary/80 transition-colors">忘记密码?</a>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg btn-hover flex items-center justify-center">
+                        <span>登录</span>
+                        <i class="fa fa-arrow-right ml-2"></i>
+                    </button>
+                </form>
+
+                <!-- 注册链接 -->
+                <div class="mt-6 text-center">
+                    <span class="text-neutral-500">还没有账号?</span>
+                    <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors">立即注册</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="mt-6 text-center text-neutral-400 text-sm">
+            <p>© 2025 校园服务平台 版权所有</p>
+        </div>
+    </div>
+
+    <!-- 消息提示组件 -->
+    <div id="toast" class="fixed top-4 right-4 max-w-xs bg-white shadow-lg rounded-lg p-4 transform translate-x-full transition-transform duration-300 z-50 flex items-center">
+        <div id="toastIcon" class="w-6 h-6 flex-shrink-0 mr-3 flex items-center justify-center">
+            <i class="fa fa-info-circle text-primary"></i>
+        </div>
+        <div>
+            <p id="toastMessage" class="text-sm text-neutral-600"></p>
+        </div>
+    </div>
+
+    <script>
+        // 页面数据
+        const app = {
+            data: {
+                isStudent: true,
+                account: '',
+                password: '',
+				apiBaseUrl: 'https://127.0.0.1:3000/', // 后端API基础URL
+                adminAccount: '111111',
+                adminPassword: '111111'
+            },
+            
+            // 初始化
+            init() {
+                this.setupEventListeners();
+            },
+            
+            // 设置事件监听
+            setupEventListeners() {
+                // 角色切换
+                document.getElementById('studentBtn').addEventListener('click', () => this.switchToStudent());
+                document.getElementById('adminBtn').addEventListener('click', () => this.switchToAdmin());
+                
+                // 表单输入
+                document.getElementById('account').addEventListener('input', (e) => this.onAccountInput(e));
+                document.getElementById('password').addEventListener('input', (e) => this.onPasswordInput(e));
+                
+                // 密码显示切换
+                document.getElementById('togglePassword').addEventListener('click', () => this.togglePasswordVisibility());
+                
+                // 登录表单提交
+                document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+            },
+            
+            // 切换到学生登录
+            switchToStudent() {
+                if (!this.data.isStudent) {
+                    this.data.isStudent = true;
+                    this.updateRoleUI();
+                }
+            },
+            
+            // 切换到管理员登录
+            switchToAdmin() {
+                if (this.data.isStudent) {
+                    this.data.isStudent = false;
+                    this.updateRoleUI();
+                }
+            },
+            
+            // 更新角色UI
+            updateRoleUI() {
+                const studentBtn = document.getElementById('studentBtn');
+                const adminBtn = document.getElementById('adminBtn');
+                
+                if (this.data.isStudent) {
+                    studentBtn.classList.remove('bg-neutral-200', 'text-neutral-500');
+                    studentBtn.classList.add('bg-primary', 'text-white');
+                    adminBtn.classList.remove('bg-primary', 'text-white');
+                    adminBtn.classList.add('bg-neutral-200', 'text-neutral-500');
+                } else {
+                    studentBtn.classList.remove('bg-primary', 'text-white');
+                    studentBtn.classList.add('bg-neutral-200', 'text-neutral-500');
+                    adminBtn.classList.remove('bg-neutral-200', 'text-neutral-500');
+                    adminBtn.classList.add('bg-primary', 'text-white');
+                }
+            },
+            
+            // 账号输入处理
+            onAccountInput(e) {
+                this.data.account = e.target.value;
+            },
+            
+            // 密码输入处理
+            onPasswordInput(e) {
+                this.data.password = e.target.value;
+            },
+            
+            // 切换密码可见性
+            togglePasswordVisibility() {
+                const passwordInput = document.getElementById('password');
+                const toggleIcon = document.getElementById('togglePassword').querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                }
+            },
+            
+            // 登录处理
+            handleLogin(e) {
+                e.preventDefault();
+                
+                if (this.data.isStudent) {
+                    // 学生登录逻辑
+                    this.showToast('登录中...', 'info');
+                    
+                    // 使用现有的 /getStudents 接口获取所有学生信息
+                    fetch('http://localhost:3000/getStudents', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('获取学生信息失败: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(students => {
+                        // 在前端验证学号和密码
+                        const studentId = this.data.account;  // 从data中获取账号
+                        const password = this.data.password;  // 从data中获取密码
+                        
+                        // 查找学号和密码都匹配的学生（假设密码存储在某个字段中）
+                        const validStudent = students.find(
+                            student => 
+                                studentId === student.student_id && 
+                                password === student.student_id  // 使用宿舍号作为密码示例
+                        );
+                        
+                        if (validStudent) {
+                            // 登录成功，生成一个前端token（实际项目中应由后端生成）
+                            const token = 'student_token_' + Date.now();
+                            localStorage.setItem('token', token);
+                            localStorage.setItem('studentId', studentId);
+                            
+                            this.showToast('登录成功', 'success');
+                            
+                            // 延迟跳转以便用户看到提示
+                            setTimeout(() => {
+                                window.location.href = 'https://www.taobao.com/wow/z/tbhome/pcsem/alimama?refpid=mm_2898300158_3078300397_115665800437&keyword=taobao.com&bc_fl_src=tbsite_T9W2LtnM&channelSrp=bingSomama&msclkid=229aa4e3cb071abcad2eccb8bed19775&clk1=0c4eee030ab32ca2d6dca6f51d7b495e&upsId=0c4eee030ab32ca2d6dca6f51d7b495e';
+                            }, 1000);
+                        } else {
+                            this.showToast('学号或密码错误', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        this.showToast('网络请求失败，请稍后重试', 'error');
+                        console.error('登录请求失败:', error);
+                    });
+                } else {
+                    // 管理员登录逻辑
+                    if (this.data.account === this.data.adminAccount && this.data.password === this.data.adminPassword) {
+                        localStorage.setItem('token', 'admin_token');
+                        this.showToast('管理员登录成功', 'success');
+                        
+                        // 模拟页面跳转
+                        setTimeout(() => {
+                            window.location.href = 'https://www.taobao.com/wow/z/tbhome/pcsem/alimama?refpid=mm_2898300158_3078300397_115665800437&keyword=taobao.com&bc_fl_src=tbsite_T9W2LtnM&channelSrp=bingSomama&msclkid=229aa4e3cb071abcad2eccb8bed19775&clk1=0c4eee030ab32ca2d6dca6f51d7b495e&upsId=0c4eee030ab32ca2d6dca6f51d7b495e';
+                        }, 1500);
+                    } else {
+                        this.showToast('管理员账号或密码错误', 'error');
+                    }
+                }
+            },
+            
+            // 显示消息提示
+            showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                const toastIcon = document.getElementById('toastIcon').querySelector('i');
+                
+                // 设置消息内容
+                toastMessage.textContent = message;
+                
+                // 设置图标和颜色
+                toastIcon.className = 'fa';
+                switch (type) {
+                    case 'success':
+                        toastIcon.classList.add('fa-check-circle', 'text-green-500');
+                        break;
+                    case 'error':
+                        toastIcon.classList.add('fa-exclamation-circle', 'text-red-500');
+                        break;
+                    case 'warning':
+                        toastIcon.classList.add('fa-exclamation-triangle', 'text-yellow-500');
+                        break;
+                    default: // info
+                        toastIcon.classList.add('fa-info-circle', 'text-primary');
+                }
+                
+                // 显示提示
+                toast.classList.remove('translate-x-full');
+                toast.classList.add('translate-x-0');
+                
+                // 3秒后隐藏
+                setTimeout(() => {
+                    toast.classList.remove('translate-x-0');
+                    toast.classList.add('translate-x-full');
+                }, 3000);
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
+    
